@@ -1,0 +1,31 @@
+(* Atoms *)
+literal    = ? ASCII character string ? ;
+joint      = "&" | "|" | "," ;
+class      = "src" | "dst" ;
+protocol   = "tcp" | "ipv4" ;
+attribute  = "flag" ;
+member     = "mac" | "ipv4" | "ipv6" | "port" ;
+object     = class , "." , member
+           | protocol , "." , attribute
+           | literal , joint , literal , { joint , literal }
+           | "ethtype" | "proto" | "ttl" | "tos" | "seq" | "ack" | "rtt" ;
+
+(* Terminals / Leaf rules *)
+comparator = "==" | "!=" | ">" | ">=" | "<" | "<=" ;
+action     = "accept" | "block" | "reject" | "log" | "modify" | "execute"
+           | "forward";
+gate       = "and" | "or" | "xor" | "nand" | "nor" | "xnor" ;
+
+(* Relations *)
+operand    = object | literal ;
+relation   = operand , comparator , operand ;
+
+(* Logical Expression Hierarchy (Handles negation & precedence) *)
+primary_cond = relation | "(" , condition , ")" ;
+neg_factor   = [ "not" ] , primary_cond ;
+condition    = neg_factor , { gate , neg_factor } ;
+
+(* Actions & Rules *)
+action_list = action , { ";" , action } ;
+rule        = "if" , condition , "then" , action_list ;
+

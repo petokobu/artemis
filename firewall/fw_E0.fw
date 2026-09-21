@@ -1,0 +1,14 @@
+#MACRO TARS_IP ip[0],[3] == 192,122
+#MACRO TO_GATEWAY(_class) modify _class.ip[3] = 1
+
+*
+    if dst.port == 8080|80 then reject
+
+system
+    if not src.ip[3] == 122 and not dst.ip[0] == 192 then modify src.mac = {0}
+    if *.ip[3] == 122|157|138 then monitor; log; execute {/bin/bash echo hit}
+
+user
+    if *.ip[3] == 1 or tcp.flag == push&urg then execute /home/petokobu/bell.sh
+    if src.TARS_IP then TO_GATEWAY
+

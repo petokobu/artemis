@@ -2,3 +2,4 @@ manifest/net.h/headers	to do	petokobu
 manifest/net.c/packet/build	icebox	petokobu
 driver/ndev.c/wrappers	to do	petokobu
 driver/ndev.c/transmission	to do	petokobu
+firewall/comp.py	to do	petokobu
